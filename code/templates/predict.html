@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardiovascular Intelligence - Clinical Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            /* Medical Background Image with Overlay */
+            background: linear-gradient(rgba(240, 242, 245, 0.85), rgba(240, 242, 245, 0.85)), 
+                        url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh; 
+            padding: 50px 0; 
+            font-family: 'Segoe UI', sans-serif; 
+        }
+
+        .main-card { 
+            border-radius: 25px; 
+            border: none; 
+            overflow: hidden; 
+            background: rgba(255, 255, 255, 0.95); 
+            transition: transform 0.3s ease; 
+        }
+        
+        .main-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important; }
+        
+        .header-gradient { 
+            background: linear-gradient(90deg, #2c3e50, #4ca1af); 
+            color: white; 
+            padding: 25px 30px; 
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+        }
+
+        .nav-icon-link {
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            transition: 0.3s;
+            opacity: 0.85;
+        }
+
+        .nav-icon-link:hover {
+            color: white;
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .form-label { font-weight: 600; font-size: 0.85rem; color: #555; text-transform: uppercase; }
+        .section-tag { border-left: 4px solid #4ca1af; padding-left: 10px; margin: 30px 0 15px 0; font-weight: 800; color: #2c3e50; }
+        .progress { height: 30px; border-radius: 50px; background-color: #eee; }
+        .progress-bar { transition: width 2.5s cubic-bezier(0.1, 0.42, 0.41, 1); font-weight: bold; }
+        
+        .pulse { animation: pulse-icon 2s infinite; }
+        @keyframes pulse-icon { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            
+            <!-- INPUT FORM CARD -->
+            <div class="card main-card shadow">
+                <div class="header-gradient">
+                    <!-- Back Button -->
+                    <a href="/" class="nav-icon-link">
+                        <i class="fas fa-arrow-left fa-xl"></i><br><small>Home</small>
+                    </a>
+
+                    <div class="text-center">
+                        <h2 class="mb-0 fw-bold">Clinical Analysis Form</h2>
+                        <p class="mb-0 opacity-75 small">Input patient metrics for diagnostic prediction</p>
+                    </div>
+
+                    <!-- Reset Button -->
+                    <a href="/tool" class="nav-icon-link">
+                        <i class="fas fa-rotate-left fa-xl"></i><br><small>Reset</small>
+                    </a>
+                </div>
+
+                <div class="card-body p-5">
+                    <form action="/predict" method="post">
+                        
+                        <div class="section-tag">1. PATIENT DEMOGRAPHICS</div>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Patient Age (0-120)</label>
+                                <input type="number" name="age" class="form-control" required min="0" max="120" oninput="if(value > 120) value = 120; if(value < 0) value = 0;">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Sex</label>
+                                <select name="sex" class="form-select" required>
+                                    <option value="1">1 = Male</option>
+                                    <option value="0">0 = Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="section-tag">2. VITALS & BLOOD WORK</div>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Resting Blood Pressure (mm Hg)</label>
+                                <input type="number" name="trestbps" class="form-control" placeholder="e.g. 120" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Serum Cholestoral (mg/dl)</label>
+                                <input type="number" name="chol" class="form-control" placeholder="e.g. 200" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Fasting Blood Sugar > 120 mg/dl</label>
+                                <select name="fbs" class="form-select" required>
+                                    <option value="0">0 = False (Normal)</option>
+                                    <option value="1">1 = True (High)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Max Heart Rate Achieved</label>
+                                <input type="number" name="thalach" class="form-control" placeholder="e.g. 150" required>
+                            </div>
+                        </div>
+
+                        <div class="section-tag">3. CARDIAC SYMPTOMS</div>
+                        <div class="row g-4">
+                            <div class="col-md-12">
+                                <label class="form-label">Chest Pain Type</label>
+                                <select name="cp" class="form-select" required>
+                                    <option value="0">0 = Typical Angina (Pain during effort)</option>
+                                    <option value="1">1 = Atypical Angina (Non-classic signs)</option>
+                                    <option value="2">2 = Non-anginal Pain (Likely unrelated)</option>
+                                    <option value="3">3 = Asymptomatic (No physical pain)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Exercise Induced Angina</label>
+                                <select name="exang" class="form-select" required>
+                                    <option value="0">0 = No</option>
+                                    <option value="1">1 = Yes (Pain triggered by exercise)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Resting ECG Results</label>
+                                <select name="restecg" class="form-select" required>
+                                    <option value="0">0 = Normal</option>
+                                    <option value="1">1 = ST-T Wave Abnormality</option>
+                                    <option value="2">2 = Left Ventricular Hypertrophy</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="section-tag">4. ADVANCED CLINICAL MARKERS</div>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label">ST Depression (Oldpeak: 0.0 - 6.0)</label>
+                                <input type="number" step="0.1" name="oldpeak" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Slope of ST Segment</label>
+                                <select name="slope" class="form-select" required>
+                                    <option value="0">0 = Upsloping (Healthy)</option>
+                                    <option value="1">1 = Flat</option>
+                                    <option value="2">2 = Downsloping (Risk Marker)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Major Vessels (0-4)</label>
+                                <input type="number" name="ca" class="form-control" min="0" max="4" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Thalassemia Test Result</label>
+                                <select name="thal" class="form-select" required>
+                                    <option value="1">1 = Fixed Defect</option>
+                                    <option value="2">2 = Normal</option>
+                                    <option value="3">3 = Reversible Defect</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mt-5 py-3 shadow fw-bold">RUN AI PREDICTION</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- RESULT DISPLAY SECTION -->
+            {% if prediction_text %}
+            <div id="result-scroll" class="card mt-5 border-0 shadow-lg overflow-hidden" style="border-radius: 25px; background: rgba(255, 255, 255, 0.98);">
+                <div class="row g-0">
+                    <div class="col-md-4 bg-{{res_color}} text-white d-flex align-items-center justify-content-center p-5">
+                        <div class="text-center">
+                            {% if res_color == 'danger' %}
+                                <i class="fas fa-triangle-exclamation fa-5x pulse mb-3"></i>
+                                <h2 class="fw-bold">ALERT</h2>
+                            {% else %}
+                                <i class="fas fa-heart-circle-check fa-5x mb-3"></i>
+                                <h2 class="fw-bold">STABLE</h2>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-5 bg-white">
+                        <h6 class="text-muted fw-bold">DIAGNOSTIC SUMMARY</h6>
+                        <h2 class="fw-bold text-{{res_color}} mb-4">{{ prediction_text }}</h2>
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="fw-bold">AI Risk Probability</span>
+                            <span class="badge bg-{{res_color}}">{{ prob }}</span>
+                        </div>
+                        <div class="progress mb-4">
+                            <div id="riskBar" class="progress-bar bg-{{res_color}} progress-bar-striped progress-bar-animated" 
+                                 role="progressbar" style="width: 0%"></div>
+                        </div>
+
+                        <p class="text-secondary small">
+                            *This analysis is produced by an expert system. 
+                            <strong>
+                                {% if res_color == 'danger' %}
+                                    Urgent medical review is recommended.
+                                {% else %}
+                                    Metrics appear within standard safety ranges.
+                                {% endif %}
+                            </strong>
+                        </p>
+                        
+                        <div class="mt-4 pt-3 border-top d-flex gap-2">
+                            <a href="/tool" class="btn btn-{{res_color}} px-4">New Analysis</a>
+                            <button onclick="window.print()" class="btn btn-outline-secondary px-4"><i class="fas fa-print"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(() => {
+                        const bar = document.getElementById('riskBar');
+                        if(bar) bar.style.width = "{{ prob_val }}%";
+                    }, 300);
+                    
+                    const resArea = document.getElementById('result-scroll');
+                    if(resArea) resArea.scrollIntoView({ behavior: 'smooth' });
+                });
+            </script>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
